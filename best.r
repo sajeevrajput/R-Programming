@@ -29,7 +29,29 @@ best <- function(state, outcome){
         s2<-paste(s2,".",s1[i],sep="")
     }
     
-    str1<-paste("Hospital.30.Day.Death..Mortality..Rates.from",s2,sep="")   #final string as per the column  name to be fetch
+    stroutcome<-paste("Hospital.30.Day.Death..Mortality..Rates.from",s2,sep="")   #final string as per the column  name to be fetch
     
+    ###############################################################
+    #VERIFY IF STATE AND OUTCOME ARE VALID, OTHERWISE THROW ERROR #
+    ###############################################################
+    my_file <- read.csv("outcome-of-care-measures.csv",colClasses="character")
+    
+    if(!state %in% my_file$State)
+        stop("invalid state")
+    else if(!stroutcome %in% c("Hospital.30.Day.Death..Mortality..Rates.from.Heart.Attack", 
+                            "Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure",
+                                "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"))
+        stop("invalid outcome")
+    
+    my_file <- my_file[my_file$State==state,]
+    #min(my_file[[stroutcome]],na.rm=TRUE)
+    min(my_file$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure)
+    
+    #my_file <- my_file[,c("Hospital.Name","State",stroutcome)]
+    #my_file<- my_file[my_file$State==state,]
+    #my_file
+    #minoutcome<- min(my_file[[stroutcome]],na.rm=TRUE)
+    #my_file[my_file[[stroutcome]]==minoutcome ,]
+    #min(my_file[[stroutcome]],na.rm=TRUE)
 
 }
