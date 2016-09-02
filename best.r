@@ -43,15 +43,20 @@ best <- function(state, outcome){
                                 "Hospital.30.Day.Death..Mortality..Rates.from.Pneumonia"))
         stop("invalid outcome")
     
-    my_file <- my_file[my_file$State==state,]
-    #min(my_file[[stroutcome]],na.rm=TRUE)
-    min(my_file$Hospital.30.Day.Death..Mortality..Rates.from.Heart.Failure)
+    ######################################################################################################
+    # 1.select data from file only for the input state
+    # 2.remove outcome=NA valued rows(suppress warning(s) just for this operation)
+    # 3.order the file by outcome
+    # 4.return only the top(least outcome/rate of mortality) row's Hospital.Name from ordered file
+    #################################################################################################
     
-    #my_file <- my_file[,c("Hospital.Name","State",stroutcome)]
-    #my_file<- my_file[my_file$State==state,]
-    #my_file
-    #minoutcome<- min(my_file[[stroutcome]],na.rm=TRUE)
-    #my_file[my_file[[stroutcome]]==minoutcome ,]
-    #min(my_file[[stroutcome]],na.rm=TRUE)
-
+    my_file <- my_file[my_file$State==state,]
+    options(warn=-1)
+    my_file[[stroutcome]] <- as.numeric(my_file[[stroutcome]])
+    options(warn=0)
+    my_file <- my_file[!is.na(my_file[[stroutcome]]),]  #rows with stroutcome=NA removed
+    
+    my_file<-my_file[order(my_file[[stroutcome]]),] #ordered my_file
+    my_file[1,]$Hospital.Name
+    
 }
